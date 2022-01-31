@@ -1,2 +1,2 @@
 # from-scratch
-Design algorithms from scratch
+Designing algorithms from scratch
