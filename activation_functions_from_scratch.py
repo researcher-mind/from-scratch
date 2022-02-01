@@ -20,25 +20,28 @@ class Sigmoid():
   which means that the algorithm does not improve the network much over time. 
   """
   def __call__(self, x):
-      return 1 / (1 + np.exp(-x)) #The range: (0, 1)
+    return 1 / (1 + np.exp(-x)) #The range: (0, 1)
 
   def gradient(self, x):
-      return self.__call__(x) * (1 - self.__call__(x))
+    return self.__call__(x) * (1 - self.__call__(x))
 
 class Softmax():
+  """
+  A nice way to avoid overshooting of numbers because of exponential is to substract by maximum value
+  """
   def __call__(self, x):
-      return np.exp(x) / sum(np.exp(x))
+    return np.exp(x - np.max(x)) / sum(np.exp(x - np.max(x)))
 
   def gradient(self, x):
-      p = self.__call__(x)
-      return p * (1 - p)
+    p = self.__call__(x)
+    return p * (1 - p)
 
 class TanH():
   def __call__(self, x):
-      return 2 / (1 + np.exp(-2*x)) - 1 #The range of the tanh function is from (-1 to 1)
+    return 2 / (1 + np.exp(-2*x)) - 1 #The range of the tanh function is from (-1 to 1)
 
   def gradient(self, x):
-      return 1 - np.power(self.__call__(x), 2)
+    return 1 - np.power(self.__call__(x), 2)
 
 class ReLU():
   """
@@ -50,10 +53,10 @@ class ReLU():
   requires less space and are less computationally expensive.
   """
   def __call__(self, x):
-      return np.where(x >= 0, x, 0)
+    return np.where(x >= 0, x, 0)
 
   def gradient(self, x):
-      return np.where(x >= 0, 1, 0)
+    return np.where(x >= 0, 1, 0)
 
 class LeakyReLU():
   """
@@ -63,13 +66,13 @@ class LeakyReLU():
   Though an issue is that we still have to deal with exploding gradients
   """
   def __init__(self, alpha=0.2):
-      self.alpha = alpha
+    self.alpha = alpha
 
   def __call__(self, x):
-      return np.where(x >= 0, x, self.alpha * x)
+    return np.where(x >= 0, x, self.alpha * x)
 
   def gradient(self, x):
-      return np.where(x >= 0, 1, self.alpha)
+    return np.where(x >= 0, 1, self.alpha)
 
 class ELU():
   """
@@ -79,13 +82,13 @@ class ELU():
   We avoid the dead relu problem here because of alpha
   """
   def __init__(self, alpha=0.1):
-      self.alpha = alpha 
+    self.alpha = alpha 
 
   def __call__(self, x):
-      return np.where(x >= 0.0, x, self.alpha * (np.exp(x) - 1))
+    return np.where(x >= 0.0, x, self.alpha * (np.exp(x) - 1))
 
   def gradient(self, x):
-      return np.where(x >= 0.0, 1, self.__call__(x) + self.alpha)
+    return np.where(x >= 0.0, 1, self.__call__(x) + self.alpha)
 
 class SELU():
   """
@@ -93,21 +96,21 @@ class SELU():
   """
   # Reference : https://arxiv.org/abs/1706.02515
   def __init__(self):
-      self.alpha = 1.6732632423543772848170429916717
-      self.scale = 1.0507009873554804934193349852946 
+    self.alpha = 1.6732632423543772848170429916717
+    self.scale = 1.0507009873554804934193349852946 
 
   def __call__(self, x):
-      return self.scale * np.where(x >= 0.0, x, self.alpha*(np.exp(x)-1))
+    return self.scale * np.where(x >= 0.0, x, self.alpha*(np.exp(x)-1))
 
   def gradient(self, x):
-      return self.scale * np.where(x >= 0.0, 1, self.alpha * np.exp(x))
+    return self.scale * np.where(x >= 0.0, 1, self.alpha * np.exp(x))
 
 class SoftPlus():
   """
   Softplus activation function is a smooth version of ReLU. 
   """
   def __call__(self, x):
-      return np.log1p(np.exp(x))
+    return np.log1p(np.exp(x))
 
   def gradient(self, x):
-      return 1/(1+((np.exp)**-x))
+    return 1/(1+((np.exp)**-x))
